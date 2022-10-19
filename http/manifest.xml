@@ -1,0 +1,25 @@
+<!DOCTYPE auto_install SYSTEM "file:///usr/share/install/ai.dtd.1">
+<auto_install>
+  <ai_instance name="default" auto_reboot='true' >
+      <boot_mods timeout="1"/>
+    <target>
+      <logical nodump="true">
+        <zpool name="rpool" is_root="true">
+          <filesystem name="export" mountpoint="/export"/>
+          <filesystem name="export/home"/>
+          <pool_options>
+            <option name="autoexpand" value="on"/>
+          </pool_options>
+        </zpool>
+      </logical>
+    </target>
+    <software type="ARCHIVE">
+      <source>
+        <file uri="file:///.cdrom/archive.uar"/>
+      </source>
+    <software_data action="install">
+      <name>*</name>
+    </software_data>
+    </software>
+  </ai_instance>
+</auto_install>

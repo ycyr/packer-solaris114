@@ -1,0 +1,89 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "e<wait>",
+        "<down><down><down><down><down><wait>",
+        "<end>",
+        " -B install=true,aimanifest=http://{{ .HTTPIP }}:{{ .HTTPPort }}/manifest.xml,profile=http://{{ .HTTPIP }}:{{ .HTTPPort }}/profile.xml",
+        "<f10>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 8192,
+      "guest_os_type": "Solaris11_64",
+      "iso_checksum": "5439f00a074240dfc835c485f61ac939c3cb01e7644847e98d8f4e2fcb25f19e",
+      "iso_checksum_type": "sha256",
+      "iso_url": "file://{{pwd}}/AI_Archive.iso",
+      "http_directory": "http",
+      "output_directory": "packer-solaris11-ai-virtualbox",
+      "shutdown_command": "sudo /usr/sbin/init 5",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant01",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "20m",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1536"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "2"
+        ]
+      ],
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "packer-solaris-ai"
+    },
+    {
+        "boot_command": [
+          "e<wait>",
+          "<down><down><down><down><down><wait>",
+          "<end>",
+          " -B install=true,aimanifest=http://{{ .HTTPIP }}:{{ .HTTPPort }}/manifest.xml,profile=http://{{ .HTTPIP }}:{{ .HTTPPort }}/profile.xml",
+          "<f10>"
+        ],
+      "boot_wait": "10s",
+      "disk_size": 8192,
+      "guest_os_type": "solaris11-64",
+      "iso_checksum": "5439f20af74244dfc835c485f61ac939c3cb01e7644847e98d8f4e2fcb25f19e",
+      "iso_checksum_type": "sha256",
+      "iso_url": "file://{{pwd}}/AI_Archive.iso",
+      "http_directory": "http",
+      "output_directory": "packer-solaris11_2-vmware",
+      "shutdown_command": "sudo /usr/sbin/init 5",
+      "ssh_port": 22,
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant01",
+      "tools_upload_flavor": "solaris",
+      "type": "vmware-iso",
+      "vm_name": "packer-solaris11_3",
+      "vmx_data": {
+        "cpuid.coresPerSocket": "1",
+        "memsize": "1536",
+        "numvcpus": "2"
+      }
+    }
+  ],
+  "post-processors": [
+    {
+      "compression_level": 6,
+      "output": "./builds/{{.Provider}}/solaris11_ai.box",
+      "type": "vagrant"
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/solaris/vmtools.sh",
+        "scripts/solaris/postinstall.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}
